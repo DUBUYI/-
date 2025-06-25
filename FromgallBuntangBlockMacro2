@@ -1,0 +1,84 @@
+function go(x){
+	const popup = window.open(x);
+	
+	if (!popup) return; // 팝업 차단된 경우
+	
+	popup.onload = function(){
+		const profileDropdown = popup.document.querySelector("#profile_action_dropdown");
+		if (!profileDropdown) {
+			popup.close(); // 프로필 메뉴가 없으면 종료
+			return;
+		}
+
+		const blockBtn = popup.document.querySelector("#profile_action_dropdown > div.popup_body.popup_menu.shadow_content > a:nth-child(3)");
+		if (blockBtn && blockBtn.textContent.trim() === "Block All Communication") {
+			blockBtn.click();
+
+			setTimeout(function(){
+				const confirmBtn = popup.document.querySelector("body > div.newmodal > div.newmodal_content_border > div > div.newmodal_buttons > div.btn_green_steamui.btn_medium");
+				if (confirmBtn) confirmBtn.click();
+
+				setTimeout(function(){ popup.close(); }, 10000);
+			}, 5000);
+		} else {
+			popup.close();
+		}
+	};
+}
+
+blockprofile = [
+'https://steamcommunity.com/profiles/76561198115048639/',
+'https://steamcommunity.com/profiles/76561198830196720/',
+'https://steamcommunity.com/profiles/76561198061416516/',
+'https://steamcommunity.com/profiles/76561199088517761/',
+'https://steamcommunity.com/profiles/76561199637739292/',
+'https://steamcommunity.com/profiles/76561198326290621/',
+'https://steamcommunity.com/profiles/76561199317198392/',
+'https://steamcommunity.com/profiles/76561198931746783/',
+'https://steamcommunity.com/profiles/76561199317148259/',
+'https://steamcommunity.com/profiles/76561198122794020/',
+'https://steamcommunity.com/profiles/76561199611187319/',
+'https://steamcommunity.com/profiles/76561198986230475/',
+'https://steamcommunity.com/profiles/76561199406922682/',
+'https://steamcommunity.com/profiles/76561198867130733/',
+'https://steamcommunity.com/profiles/76561199443112548/',
+'https://steamcommunity.com/profiles/76561199659947010/',
+'https://steamcommunity.com/profiles/76561199610934186/',
+'https://steamcommunity.com/profiles/76561199079240441/',
+'https://steamcommunity.com/profiles/76561199206294369/',
+'https://steamcommunity.com/profiles/76561198971444098/',
+'https://steamcommunity.com/profiles/76561199316212879/',
+'https://steamcommunity.com/profiles/76561198408981381/',
+'https://steamcommunity.com/profiles/76561199059196699/',
+'https://steamcommunity.com/profiles/76561198057984359/',
+'https://steamcommunity.com/profiles/76561199417639786/',
+'https://steamcommunity.com/profiles/76561198203786692/',
+'https://steamcommunity.com/profiles/76561198027987614/',
+'https://steamcommunity.com/profiles/76561198369664663/',
+'https://steamcommunity.com/profiles/76561199142540086/',
+'https://steamcommunity.com/profiles/76561199063138795/',
+'https://steamcommunity.com/profiles/76561199087624767/',
+'https://steamcommunity.com/profiles/76561198093435250/',
+'https://steamcommunity.com/profiles/76561199427132560/',
+'https://steamcommunity.com/profiles/76561199659092123/',
+'https://steamcommunity.com/profiles/76561198964793051/',
+'https://steamcommunity.com/profiles/76561199428539023',
+'https://steamcommunity.com/profiles/76561199247145076/',
+'https://steamcommunity.com/profiles/76561199479757321/',
+'https://steamcommunity.com/profiles/76561198071781584/',
+'https://steamcommunity.com/profiles/76561199177573813/',
+'https://steamcommunity.com/profiles/76561198986212039/',
+'https://steamcommunity.com/profiles/76561199329371754/',
+'https://steamcommunity.com/profiles/76561199429989784/',
+'https://steamcommunity.com/profiles/76561199684023672/',
+'https://steamcommunity.com/profiles/76561199656345359/',
+'https://steamcommunity.com/profiles/76561199501068683/',
+'https://steamcommunity.com/profiles/76561199021839365/',
+'https://steamcommunity.com/profiles/76561199699654777/',
+'https://steamcommunity.com/profiles/76561199231219465/',
+'https://steamcommunity.com/profiles/76561198061845709/'
+];
+
+for (var i = 0; i < blockprofile.length; i++){
+	go(blockprofile[i])
+} // 팝업 차단 해제 필수
