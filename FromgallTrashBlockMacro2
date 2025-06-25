@@ -71,7 +71,8 @@ blockprofile = [
 'https://steamcommunity.com/profiles/76561198113185263/',
 'https://steamcommunity.com/profiles/76561198211548375/',
 'https://steamcommunity.com/profiles/76561198108217201/',
-'https://steamcommunity.com/profiles/76561198079259544/'
+'https://steamcommunity.com/profiles/76561198079259544/',
+'https://steamcommunity.com/profiles/76561198018360943/'
 ];
 
 for (var i = 0; i < blockprofile.length; i++){
