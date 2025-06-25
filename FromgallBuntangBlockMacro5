@@ -1,0 +1,61 @@
+function go(x){
+	const popup = window.open(x);
+	
+	if (!popup) return; // 팝업 차단된 경우
+	
+	popup.onload = function(){
+		const profileDropdown = popup.document.querySelector("#profile_action_dropdown");
+		if (!profileDropdown) {
+			popup.close(); // 프로필 메뉴가 없으면 종료
+			return;
+		}
+
+		const blockBtn = popup.document.querySelector("#profile_action_dropdown > div.popup_body.popup_menu.shadow_content > a:nth-child(3)");
+		if (blockBtn && blockBtn.textContent.trim() === "Block All Communication") {
+			blockBtn.click();
+
+			setTimeout(function(){
+				const confirmBtn = popup.document.querySelector("body > div.newmodal > div.newmodal_content_border > div > div.newmodal_buttons > div.btn_green_steamui.btn_medium");
+				if (confirmBtn) confirmBtn.click();
+
+				setTimeout(function(){ popup.close(); }, 10000);
+			}, 5000);
+		} else {
+			popup.close();
+		}
+	};
+}
+
+blockprofile = [
+'https://steamcommunity.com/profiles/76561199045953415/',
+'https://steamcommunity.com/profiles/76561199697390650/',
+'https://steamcommunity.com/profiles/76561198449038604/',
+'https://steamcommunity.com/profiles/76561199848702979/',
+'https://steamcommunity.com/profiles/76561199820306790/',
+'https://steamcommunity.com/profiles/76561198302652016/',
+'https://steamcommunity.com/profiles/76561199107493025/',
+'https://steamcommunity.com/profiles/76561199670084092/',
+'https://steamcommunity.com/profiles/76561199071720168/',
+'https://steamcommunity.com/profiles/76561198213858384/',
+'https://steamcommunity.com/profiles/76561199850578302/',
+'https://steamcommunity.com/profiles/76561199849903827/',
+'https://steamcommunity.com/profiles/76561198022172251/',
+'https://steamcommunity.com/profiles/76561198101896600/',
+'https://steamcommunity.com/profiles/76561199684199087/',
+'https://steamcommunity.com/profiles/76561199567974991/',
+'https://steamcommunity.com/profiles/76561199613931764/',
+'https://steamcommunity.com/profiles/76561198145835312/',
+'https://steamcommunity.com/profiles/76561198149089901/',
+'https://steamcommunity.com/profiles/76561199206147802/',
+'https://steamcommunity.com/profiles/76561198313871141/',
+'https://steamcommunity.com/profiles/76561199131518037/',
+'https://steamcommunity.com/profiles/76561199521823828/',
+'https://steamcommunity.com/profiles/76561198195646655/',
+'https://steamcommunity.com/profiles/76561198425816036/',
+'https://steamcommunity.com/profiles/76561199081364323/',
+'https://steamcommunity.com/profiles/76561199526333734/'
+];
+
+for (var i = 0; i < blockprofile.length; i++){
+	go(blockprofile[i])
+} // 팝업 차단 해제 필수
