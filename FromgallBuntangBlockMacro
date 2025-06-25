@@ -386,5 +386,3 @@ setTimeout(() => {
 		tryBlock(popupArr[i], 0);
 	}
 }, 10000);
-
-blockprofile =
