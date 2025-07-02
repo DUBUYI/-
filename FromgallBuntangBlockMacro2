@@ -1,32 +1,12 @@
-function go(x){
-	const popup = window.open(x);
-	
-	if (!popup) return; // 팝업 차단된 경우
-	
-	popup.onload = function(){
-		const profileDropdown = popup.document.querySelector("#profile_action_dropdown");
-		if (!profileDropdown) {
-			popup.close(); // 프로필 메뉴가 없으면 종료
-			return;
-		}
+const popupArr = [];
 
-		const blockBtn = popup.document.querySelector("#profile_action_dropdown > div.popup_body.popup_menu.shadow_content > a:nth-child(3)");
-		if (blockBtn && blockBtn.textContent.trim() === "Block All Communication") {
-			blockBtn.click();
-
-			setTimeout(function(){
-				const confirmBtn = popup.document.querySelector("body > div.newmodal > div.newmodal_content_border > div > div.newmodal_buttons > div.btn_green_steamui.btn_medium");
-				if (confirmBtn) confirmBtn.click();
-
-				setTimeout(function(){ popup.close(); }, 10000);
-			}, 5000);
-		} else {
-			popup.close();
-		}
-	};
+// 1. 팝업 열기
+function go(url) {
+	const popup = window.open(url);
+	if (popup) popupArr.push(popup);
 }
 
-blockprofile = [
+const blockprofile = [
 'https://steamcommunity.com/profiles/76561198115048639/',
 'https://steamcommunity.com/profiles/76561198830196720/',
 'https://steamcommunity.com/profiles/76561198061416516/',
@@ -79,6 +59,55 @@ blockprofile = [
 'https://steamcommunity.com/profiles/76561198061845709/'
 ];
 
-for (var i = 0; i < blockprofile.length; i++){
-	go(blockprofile[i])
-} // 팝업 차단 해제 필수
+for (let i = 0; i < blockprofile.length; i++) {
+	go(blockprofile[i]);
+}
+
+// 2. 차단 실행 함수
+function tryBlock(popup, retryCount = 0) {
+	if (!popup || popup.closed) return;
+
+	try {
+		// 1-1. '더보기' 메뉴 클릭
+		const moreBtn = popup.document.querySelector('#profile_action_dropdown_link');
+		if (moreBtn) moreBtn.click();
+
+		// 1-2. 메뉴 뜰 시간 기다렸다가 버튼 탐색
+		setTimeout(() => {
+			const blockBtn = popup.document.querySelector('#profile_action_dropdown a[href*="ConfirmBlock"]');
+			if (blockBtn) {
+				blockBtn.click();
+
+				setTimeout(() => {
+					const confirmBtn = popup.document.querySelector("body div.newmodal .btn_green_steamui.btn_medium");
+					if (confirmBtn) confirmBtn.click();
+
+					setTimeout(() => popup.close(), 5000);
+				}, 3000);
+			} else {
+				// 실패: 재시도 허용
+				if (retryCount < 3) {
+					console.warn(`차단 버튼 없음. 새로고침 시도 ${retryCount + 1}/3`);
+					popup.location.reload();
+
+					// 2초 후 다시 시도
+					setTimeout(() => {
+						tryBlock(popup, retryCount + 1);
+					}, 2000);
+				} else {
+					console.warn(`차단 실패 (최대 재시도): 창 닫기`);
+					popup.close();
+				}
+			}
+		}, 1000);
+	} catch (e) {
+		console.warn('문서 접근 실패:', e);
+	}
+}
+
+// 3. 10초 후 모든 창에서 차단 시도
+setTimeout(() => {
+	for (let i = 0; i < popupArr.length; i++) {
+		tryBlock(popupArr[i], 0);
+	}
+}, 10000);
