@@ -52,7 +52,12 @@ const blockprofile = [
 'https://steamcommunity.com/profiles/76561198211548375/',
 'https://steamcommunity.com/profiles/76561198108217201/',
 'https://steamcommunity.com/profiles/76561198079259544/',
-'https://steamcommunity.com/profiles/76561198018360943/'
+'https://steamcommunity.com/profiles/76561198018360943/',
+'https://steamcommunity.com/profiles/76561198832659612/',
+'https://steamcommunity.com/profiles/76561198011769471/',
+'https://steamcommunity.com/profiles/76561199090795188/',
+'https://steamcommunity.com/profiles/76561199472501360/'
+
 ];
 
 for (let i = 0; i < blockprofile.length; i++) {
