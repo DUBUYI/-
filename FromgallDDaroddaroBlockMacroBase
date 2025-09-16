@@ -1,0 +1,79 @@
+const blockprofile = [
+//'링크',
+];
+
+// 팝업 열고 차단 시도
+function tryBlock(popup, retryCount = 0, onComplete) {
+  if (!popup || popup.closed) {
+    onComplete();
+    return;
+  }
+
+  try {
+    const moreBtn = popup.document.querySelector('#profile_action_dropdown_link');
+    if (moreBtn) moreBtn.click();
+
+    setTimeout(() => {
+      const blockBtn = popup.document.querySelector('#profile_action_dropdown a[href*="ConfirmBlock"]');
+      if (blockBtn) {
+        blockBtn.click();
+
+        setTimeout(() => {
+          const confirmBtn = popup.document.querySelector("body div.newmodal .btn_green_steamui.btn_medium");
+          if (confirmBtn) confirmBtn.click();
+
+          setTimeout(() => {
+            popup.close();
+            onComplete();
+          }, 625); // 딜레이 반으로 줄임 (원래 1250ms → 625ms)
+        }, 375); // 딜레이 반으로 줄임 (원래 750ms → 375ms)
+      } else {
+        if (retryCount < 1) {
+          console.warn(`차단 버튼 없음. 새로고침 시도 ${retryCount + 1}/1`);
+          popup.location.reload();
+          setTimeout(() => {
+            tryBlock(popup, retryCount + 1, onComplete);
+          }, 250); // 딜레이 반으로 줄임 (원래 500ms → 250ms)
+        } else {
+          console.warn(`차단 실패 (최대 재시도): 창 닫기`);
+          popup.close();
+          onComplete();
+        }
+      }
+    }, 125); // 딜레이 반으로 줄임 (원래 250ms → 125ms)
+  } catch (e) {
+    console.warn('문서 접근 실패:', e);
+    onComplete();
+  }
+}
+
+// 순차 실행 함수
+function processProfilesSequentially(profiles, index = 0) {
+  if (index >= profiles.length) {
+    console.log('✅ 모든 프로필 차단 시도 완료');
+    return;
+  }
+
+  const url = profiles[index];
+  const popup = window.open(url);
+
+  if (!popup) {
+    console.warn(`🚫 팝업 차단됨 또는 실패: ${url}`);
+    // 다음 프로필로 이동 (0.375초 후)
+    setTimeout(() => processProfilesSequentially(profiles, index + 1), 375); // 딜레이 반으로 줄임 (원래 750ms → 375ms)
+    return;
+  }
+
+  console.log(`🔗 프로필 열기: ${url}`);
+
+  // 1.25초 후 차단 시도 시작 (원래 2.5초 → 1250ms)
+  setTimeout(() => {
+    tryBlock(popup, 0, () => {
+      // 다음 프로필로 이동
+      setTimeout(() => processProfilesSequentially(profiles, index + 1), 250); // 딜레이 반으로 줄임 (원래 500ms → 250ms)
+    });
+  }, 1250); // 딜레이 반으로 줄임 (원래 2500ms → 1250ms)
+}
+
+// 시작
+processProfilesSequentially(blockprofile);
