@@ -6,9 +6,33 @@ function go(url) {
 	if (popup) popupArr.push(popup);
 }
 
+
 const blockprofile = [
 'https://steamcommunity.com/profiles/76561198970602734/',
-'https://steamcommunity.com/profiles/76561198815509960/'
+'https://steamcommunity.com/profiles/76561198815509960/',
+'https://steamcommunity.com/profiles/76561198941571367/',
+'https://steamcommunity.com/profiles/76561199017126441/',
+'https://steamcommunity.com/profiles/76561198425248541/',
+'https://steamcommunity.com/profiles/76561198299818571/',
+'https://steamcommunity.com/profiles/76561198289652713/',
+'https://steamcommunity.com/profiles/76561199465803104/',
+'https://steamcommunity.com/profiles/76561198847793451/',
+'https://steamcommunity.com/profiles/76561198234246612/',
+'https://steamcommunity.com/profiles/76561199073829686/',
+'https://steamcommunity.com/profiles/76561199220078444/',
+'https://steamcommunity.com/profiles/76561198137115229/',
+'https://steamcommunity.com/profiles/76561198167634400/',
+'https://steamcommunity.com/profiles/76561198202690333/',
+'https://steamcommunity.com/profiles/76561198298438469/',
+'https://steamcommunity.com/profiles/76561198856555122/',
+'https://steamcommunity.com/profiles/76561198003937421/',
+'https://steamcommunity.com/profiles/76561198109755462/',
+'https://steamcommunity.com/profiles/76561199356773372/',
+'https://steamcommunity.com/profiles/76561198255223639/',
+'https://steamcommunity.com/profiles/76561199638932194/',
+'https://steamcommunity.com/profiles/76561199356639659/',
+'https://steamcommunity.com/profiles/76561198102367931/',
+'https://steamcommunity.com/profiles/76561199196669913/',
 
 ];
 
