@@ -1,0 +1,84 @@
+// ✅ 1. 사용자 입력 받아 링크 자동 파싱
+const rawInput = prompt("차단할 Steam 프로필 링크들을 붙여넣으세요.\n(줄바꿈, 쉼표, 공백 모두 인식됩니다)");
+
+const blockprofile = rawInput
+  .split(/\s+|,|\n/) // 공백, 쉼표, 줄바꿈 기준으로 분리
+  .map(link => link.trim())
+  .filter(link => link.startsWith("http")); // 유효한 링크만 사용
+
+// ✅ 2. 팝업 열고 차단 시도
+function tryBlock(popup, retryCount = 0, onComplete) {
+  if (!popup || popup.closed) {
+    onComplete();
+    return;
+  }
+
+  try {
+    const moreBtn = popup.document.querySelector('#profile_action_dropdown_link');
+    if (moreBtn) moreBtn.click();
+
+    setTimeout(() => {
+      const blockBtn = popup.document.querySelector('#profile_action_dropdown a[href*="ConfirmBlock"]');
+      if (blockBtn) {
+        blockBtn.click();
+
+        setTimeout(() => {
+          const confirmBtn = popup.document.querySelector("body div.newmodal .btn_green_steamui.btn_medium");
+          if (confirmBtn) confirmBtn.click();
+
+          setTimeout(() => {
+            popup.close();
+            onComplete();
+          }, 625); // 차단 후 창 닫기 딜레이
+        }, 375); // 차단 확인 버튼 클릭까지 딜레이
+      } else {
+        if (retryCount < 1) {
+          console.warn(`차단 버튼 없음. 새로고침 시도 ${retryCount + 1}/1`);
+          popup.location.reload();
+          setTimeout(() => {
+            tryBlock(popup, retryCount + 1, onComplete);
+          }, 250); // 재시도 딜레이
+        } else {
+          console.warn(`차단 실패 (최대 재시도): 창 닫기`);
+          popup.close();
+          onComplete();
+        }
+      }
+    }, 125); // 메뉴 로딩 대기
+  } catch (e) {
+    console.warn('문서 접근 실패:', e);
+    onComplete();
+  }
+}
+
+// ✅ 3. 순차 실행
+function processProfilesSequentially(profiles, index = 0) {
+  if (index >= profiles.length) {
+    console.log('✅ 모든 프로필 차단 시도 완료');
+    return;
+  }
+
+  const url = profiles[index];
+  const popup = window.open(url);
+
+  if (!popup) {
+    console.warn(`🚫 팝업 차단됨 또는 실패: ${url}`);
+    setTimeout(() => processProfilesSequentially(profiles, index + 1), 375);
+    return;
+  }
+
+  console.log(`🔗 프로필 열기: ${url}`);
+
+  setTimeout(() => {
+    tryBlock(popup, 0, () => {
+      setTimeout(() => processProfilesSequentially(profiles, index + 1), 250);
+    });
+  }, 1250);
+}
+
+// ✅ 4. 시작
+if (blockprofile.length > 0) {
+  processProfilesSequentially(blockprofile);
+} else {
+  console.warn("❗ 차단할 링크가 없습니다. 입력을 확인해주세요.");
+}
